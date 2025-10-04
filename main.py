@@ -4,6 +4,9 @@ from dotenv import load_dotenv
 
 
 from os import getenv
+from db.create_db import create_db
+
+
 from chat_wiretapping.audiotion_chats import audition
 from handlers.start import start
 
@@ -11,6 +14,9 @@ from handlers.start import start
 def main():
     load_dotenv()
     token = getenv("TOKEN")
+    db = getenv("DB")
+    create_db(db)
+
     app = ApplicationBuilder().token(token).build()
 
     start_handler = CommandHandler("start", start)
