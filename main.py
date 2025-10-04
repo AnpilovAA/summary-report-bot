@@ -1,16 +1,31 @@
-from telegram import Bot
+from telegram.ext import (ApplicationBuilder, CommandHandler, MessageHandler,
+                          filters)
 from dotenv import load_dotenv
 
 
 from os import getenv
-from asyncio import run
+from chat_wiretapping.audiotion_chats import audition
+from handlers.start import start
 
 
-async def main():
+def main():
     load_dotenv()
     token = getenv("TOKEN")
-    Bot(token)
+    app = ApplicationBuilder().token(token).build()
+
+    start_handler = CommandHandler("start", start)
+
+    audition_handler = MessageHandler(filters.TEXT, audition)
+
+    app.add_handlers(
+        [
+            start_handler,
+            audition_handler,
+        ]
+    )
+
+    app.run_polling()
 
 
 if __name__ == "__main__":
-    run(main())
+    main()
